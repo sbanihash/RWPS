@@ -1,4 +1,4 @@
 [submodule "sorc/WW3"]
 	path = sorc/WW3
-	url = git@github.com:NOAA-EMC/WW3.git
-	branch = prod/GLWUv2
+	url = git@github.com:kestonsmith-noaa/WW3.git
+	branch = NetcdfNcPIOfixes
