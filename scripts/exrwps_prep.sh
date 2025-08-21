@@ -1,26 +1,20 @@
 #!/bin/bash
 ###############################################################################
 #                                                                             #
-# This script is the preprocessor for the GRL multi-grid wave model that runs #
-# using the single grid of the stand alone NWW# suite. It sets some shell     #
-# script variables for export to child scripts and copies some generally used #
-# files to the work directory. After this the actual preprocessing is         #
+# This script is the preprocessor for the RWPS wave model                     #
 # performed by the following child scripts :                                  #
 #                                                                             #
-#   wavemod_def.sh   :  generate mod_def.ww3 files when needed           #
-#   waveice_rwps.sh        :  preprocess ice fields                            #
-#   wavendfd_rwps.sh      :  find and copy ndfd wind files (GLWU)             #
+#   wavemod_def.sh   :  generate mod_def.ww3 files when needed                #
+#   waveice_rwps.sh        :  preprocess ice fields                           #
+#   wavendfd_rwps.sh      :  find and copy ndfd wind files (RWPS)             #
 #                                                                             #
 # Also used is the utililty script                                            #
 #                                                                             #
-#  wavestart.sh   : get time of most recent restart file.                #
+#  wavestart.sh   : get time of most recent restart file.                     #
 #                                                                             #
 # Remarks :                                                                   #
 #                                                                             #
-# Origination:                                                   July, 2007   #
-# Environment Equivalence Compliance:                            June, 2012   #
-# Transition to WCOSS                                            Dec,  2012   #
-# Upgrades to new curvilinear grid, ice and NAM winds            Oct,  2014   #
+# Origination:                    Saeideh Banihashemi          August, 2025   #
 #                                                                             #
 ###############################################################################
 # --------------------------------------------------------------------------- #
@@ -36,13 +30,13 @@
 
   msg="HAS BEGUN on `hostname`"
   postmsg   "$msg"
-    msg="Starting GLWU PREPROCESSOR SCRIPT"
+    msg="Starting RWPS PREPROCESSOR SCRIPT"
   postmsg   "$msg"
 
   set +x
   echo ' '
   echo '                      ********************************'
-  echo '                      *** GLWU PREPROCESSOR SCRIPT ***'
+  echo '                      *** RWPS PREPROCESSOR SCRIPT ***'
   echo '                      ********************************'
   echo ' '
   echo "Starting at : `date`"
@@ -416,8 +410,7 @@
   fi
 
 # This section was exclusive to GLW, but will keep for both GLW and GLWU, in case
-# future late runs have other ice types etc, so will generate new ice at every glw
-# and rwps runs.
+# future late runs have other ice types etc, so will generate new ice
 
 # 1.c Ice preprocessor template file
   if [ -f $FIXrwps/waveprep.ice.tmpl ]
@@ -782,7 +775,7 @@
     echo ' ' > warning
     echo '***********************************************************' >> warning
     echo '*** WARNING !! ERROR IN EXTRACTING DATA FROM NDFD GRIDS ***' >> warning
-    echo "***    Missing NDFD winds for GLWN run $PDY t${cyc}z    ***" >> warning
+    echo "***    Missing NDFD winds for RWPS run $PDY t${cyc}z    ***" >> warning
     echo '***********************************************************' >> warning
     echo ' ' >> warning
     echo "$runID prep $date $cycle : Error converting winds." >> $wavelog
@@ -823,12 +816,12 @@
 # prepare ice email	
 	echo ' ' > email.ice
 	echo '******************************************************' >> email.ice
-	echo '***   WARNING !! COULD NOT FIND GLWU/GLW ICE INFO     ' >> email.ice
+	echo '***   WARNING !! COULD NOT FIND RWPS ICE INFO     ' >> email.ice
 	echo '***        (SETTING ICE COVERAGE TO ZEROS)            ' >> email.ice
 	echo '******************************************************' >> email.ice
 	echo ' ' >> email.ice
    
-        mail.py -s "Missing GLWU/GLW ice info for $PDY t${cyc}z" email.ice
+        mail.py -s "Missing RWPS ice info for $PDY t${cyc}z" email.ice
     fi
       sort -b what_${runID}_used.$cycle > $COMOUT/what_${runID}_used.$cycle
       $SIPHONROOT/bin/dbn_alert MODEL OMBWAVE $job $COMOUT/what_${runID}_used.$cycle
@@ -842,7 +835,7 @@
   echo ' '
   echo "Ending at : `date`"
   echo ' '
-  echo '                     *** End of GLWU preprocessor ***'
+  echo '                     *** End of RWPS preprocessor ***'
   echo ' '
   [[ "$LOUD" = YES ]] && set -x
 

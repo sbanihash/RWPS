@@ -1,18 +1,15 @@
 #!/bin/sh
 ###############################################################################
 #                                                                             #
-# This is the actual forcast script for the GLW multi-grid wave model. It     #
+# This is the actual forcast script for the RWPS wave model. It               #
 # uses only a single ush script                                               #
 #                                                                             #
-#    wavestart.sh   Determine the time for the most recent available     #
+#    wavestart.sh   Determine the time for the most recent available          #
 #  restart file                                                               #
 #                                                                             #
 # For non-fatal errors output is witten to the wave.log file.                 #
 #                                                                             #
-# Origination                                                  July, 2007     #
-# COmpliance to Environment Equivalence                        June, 2012     #
-# Integration of GLWN onto single GLW system                   July, 2012     #
-# Transition to WCOSS                                          Dec,  2012     #
+# Initial RWPS workflow            Saeideh Banihashemi       August,  2025    #
 #                                                                             #
 ###############################################################################
 # --------------------------------------------------------------------------- #
@@ -37,14 +34,14 @@
   setoff='+xa'
   postmsg   "HAS BEGUN on `hostname`"
 
-  msg="Starting GLW WAVE MODEL SCRIPT"
+  msg="Starting RWPS WAVE MODEL SCRIPT"
   postmsg   "$msg"
 
   set $setoff
   echo ' '
   echo '*****************************'
-  echo '** GREAT LAKES WAVE SYSTEM **'
-  echo '*** GLWU: UNSTRUCTURED !! ***'
+  echo '** Regional WAVE SYSTEM **'
+  echo '*** RWPS: UNSTRUCTURED !! ***'
   echo '*****************************'
   echo ' '
   echo "Starting at : `date`"
@@ -319,12 +316,15 @@
       -e "s/DTFLD/ 3600/g" \
       -e "s/FIELDS/N \n WND HS FP DP ICE LM SPR MXH WBT WCC WCH PHS PTP PDIR/g" \
       -e "s/DTPNT/ 3600/g" \
+      -e "s/INPUT_CURFLD/ F F /g" \
+      -e "s/INPUT_WINDS/ T F /g" \
+      -e "s/INPUT_ICEFLD/ T F /g" \
       -e "/BUOY_FILE/r buoy.loc" \
       -e "s/BUOY_FILE/DUMMY/g" \
       -e "s/RST_TMES/$time_rsts/g" \
       -e "s/RST_TMEE/$time_rste/g" \
                                      wavefcst.inp.tmpl | \
-  sed -n "/DUMMY/!p"               > ww3_multi.inp
+  sed -n "/DUMMY/!p"               > ww3_shel.inp
  
 #  rm -f wavefcst.inp.tmpl        
    
@@ -338,7 +338,7 @@ pwd
   echo 'Start the wave model :'       
   echo '----------------------'       
   echo ' '
-  echo "  GLWU is using $wndID winds "
+  echo "  RWPS is using $wndID winds "
   echo ' '
   set $seton    
   postmsg   "Start the wave model."     
@@ -452,7 +452,7 @@ pwd
   echo ' '    
   echo "Ending at : `date`" 
   echo ' '    
-  echo '        *** End of GLWU forecast script ***'  
+  echo '        *** End of RWPS forecast script ***'  
   echo ' '    
   msg="End of GLWU WAVE MODEL SCRIPT"  
   postmsg   "$msg"
