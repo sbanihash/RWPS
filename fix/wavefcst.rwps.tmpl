@@ -1,32 +1,116 @@
-$ WAVEWATCH III Great Lakes multi-grid input file
-$ -----------------------------------------------
-$ 2 0 F 3 F F
- 1 0 F 2 F F
+$ -------------------------------------------------------------------- $
+$ WAVEWATCH III shel input file                                        $
+$ -------------------------------------------------------------------- $
+$ Define input to be used with F/T/C flag for use or nor or coupling and
+$ T/F flag for definition as a homogeneous field.
 $
-  'rwps' 'no' 'no' 'native' 'native' 'no' 'no' 'no' 'no' 'no'  1  1  0.00 1.00  F
-$  'rwps' 'no' 'no' 'native' 'no' 'no' 'no' 'no'  1  1  0.00 1.00  F
+$ Include ice and mud parameters only if IC1/2/3/4 used :
+   F F     Water levels
+   INPUT_CURFLD
+   INPUT_WINDS
+   INPUT_ICEFLD
+   F F     Atmospheric momentum
+   F F     Air density
+   F       Assimilation data : Mean parameters
+   F       Assimilation data : 1-D spectra
+   F       Assimilation data : 2-D spectra
 $
-   RUN_BEG   RUN_END
+$ Time frame of calculations ----------------------------------------- $
+$ - Starting time in yyyymmdd hhmmss format.
+$ - Ending time in yyyymmdd hhmmss format.
 $
-   T  F
+   RUN_BEG
+   RUN_END
 $
-   OUT_BEG  DTFLD  OUT_END
+$ IOSTYP
+   1
+$
+   OUT_BEG   DTFLD  OUT_END 
+   N
    FIELDS
 $
-   OUT_BEG  DTPNT  OUT_END
+   OUT_BEG   DTPNT  OUT_END
+$
+$ Global output point data file for global wave ensembles
+$
+$ Retained only deep water buoys or so from general buoy file
+$ taken from multi_1/2
+$
+$ Key to data in file:
+$
+$   LON      Longitude, east positive
+$   LAT      Latitude
+$   NAME     Output point name C*10, no blanks in name allowed
+$   AH       Anemometer height, dummy value for none-data points
+$   TYPE     Buoy type indicator, used for plotting and postprocessing
+$             DAT      Data point
+$             XDT      Former data point
+$             BPT      Boundary data for external models.
+$             VBY      'Virtual buoy'
+$   SOURCE   Source of data point
+$             ENCAN    Environment Canada
+$             GOMOOS   Gulf of Maine OOS
+$             IDT      Irish Department of Transportation
+$             METFR    Meteo France
+$             NCEP     Boundary and other data points
+$             NDBC     National Data Buoy Center
+$             PRIV     Private and incidental data sources
+$             SCRIPPS  Scripps
+$             UKMO     UK Met Office
+$             PDES     Puertos del Estados
+$             SHOM     Service Hydrographique et Oceanographique de la Marine
+$             OCNOR    Fugro Oceanor
+$             WHOI     Woods Hole Oceanographic Institute
+$	      SKOREA   South Korea
+$             MVEW     Ministerie van Verkeer en Waterstaat
+$             CORMP    Coastal Ocean Research and Monitoring Program
+$             DIMAR    Direccion General Maritima (Columbia)
+$             BP       British Petroleum
+$   SCALE    Scale indicator for plotting of locations on map
+$            Point will only be plotted if SCALE =< DX in our
+$            GrADS scripts, DX is width of plot in logitude
+$
+$   DEptH    Depth in meters
+$
+$ Notes:
+$
+$  - The '$' at the first position identifies comments for WAVEWATCH III
+$    input.
+$  - The first three data columns are used by the forecats code, the other
+$    are used by postprocessing scripts.
+$
 BUOY_FILE
+
 $
-   OUT_BEG      0  OUT_END
+$ ---------------------------------------------------------------
+$ End of list
 $
-   RST_TMES   21600  RST_TMEE
+$ ---------------------------------------------------------------
 $
-   OUT_BEG      0  OUT_END
+     0.00    0.00  'STOPSTRING'  999.   XXX  NCEP       0
 $
-   OUT_BEG      0  OUT_END
+$ Type 3 : Output along track.
+$          Flag for formatted input file.
+$                         The data files are track_i.ww3 and
+$                         track_o.ww3, see w3iotr.ftn for ad. doc.
+$
+   RUN_BEG     0  RUN_END
+$
+$ Type 4 : Restart files (no additional data required).
+$                               The data file is restartN.ww3, see
+$                               w3iors.ftn for additional doc.
+$          Flag for second restart (data server mode)
+$          Flag for extra fields in the restart file (coupling restart)
+$
+$ Keep next two lines formatting as is to allow proper parsing
+   RST_TMES   21600  RST_TMEE  F F
+$
+   RUN_BEG      0  RUN_END
+$
+   RUN_BEG      0  RUN_END
 $
   'the_end'  0
 $
   'STP'
 $
 $ End of input file
-$

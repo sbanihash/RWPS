@@ -1,5 +1,5 @@
 ############################################
-### JRWPS_FORECAST: Great Lakes Wave Sys ###
+### JRWPS_FORECAST:    Regional Wave Sys ###
 ###      LSF card for development        ###
 ############################################
 #
@@ -44,6 +44,7 @@ module load w3nco/${w3nco_ver}
 module load w3emc/${w3emc_ver}
 module load bacio/${bacio_ver}
 module load cmake/${camke_ver}
+module load scotch/${scotch_ver}
 module list
 
 # Set LSF variables
@@ -75,18 +76,6 @@ export WCOSS_SYSTEM_COM=$( echo $COMROOTp1 | cut -c7-9)
 export job=JRWPS_FORECAST
 export SMSBIN=/gpfs/${pref}p1/emc/globaldump/sms_fake
 
-# #Set Version numbers
-#version_file=$NWROOT/${sysver}/versions/run.ver      # file with version info
-#if [ -f $version_file ]
-#then
-#  source $version_file
-#else
-#  echo '##############################################'
-#  echo '### ERROR !! : COULD NOT FIND VERSION CARD ###'
-#  echo '##############################################'
-#  exit 1
-#fi
-
 # Set PDY and cycle here
 export COMDATE=`pwd`
 
@@ -107,7 +96,7 @@ fi
 export NET=rwps
 export RUN=rwps
 export model_ver=${rwps_ver}
-export HOMErwps=${HOMEwave:-/lfs/h2/emc/couple/noscrub/${runuser}/${modID}/${modID}.${rwps_ver}}
+export HOMErwps=$(cd "$(pwd)/../.." && pwd -P)
 
 # Set j-job parameters (extracted from j-job for DEV by new NCO standards)
 # the stmp file system is hugely slow
@@ -143,5 +132,5 @@ export mpicmd='mpiexec -n 960 -ppn 60  -depth 2 --cpu-bind depth'
 
 # Execute the actual J job
 ############################################################################
-${NWROOT}/${modID}/${modID}.${rwps_ver}/jobs/J${MODID}_FORECAST
+${HOMErwps}/jobs/J${MODID}_FORECAST
 ############################################################################

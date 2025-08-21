@@ -42,9 +42,9 @@ envir=dev
 # 0.a Version card
 
 # sysver=`pwd | sed 's/\// /g' | awk '{print $NF}'`
-
+export HOMErwps=$(cd "$(pwd)/../.." && pwd -P)
 NWROOT=/lfs/h2/emc/couple/noscrub/${runuser}      # root of file system
-LSFDIR=/lfs/h2/emc/couple/noscrub/${runuser}/rwps/${sysver}/dev/lsf_scripts
+LSFDIR=${HOMErwps}/dev/lsf_scripts
 
 cd ${LSFDIR}
 

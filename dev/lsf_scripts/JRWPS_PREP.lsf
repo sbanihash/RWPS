@@ -1,6 +1,6 @@
 
 ############################################
-###  JRWPS_PREP: Great Lakes Wave Sys    ###
+###  JRWPS_PREP: Regional Wave Sys       ###
 ###      LSF card for development        ###
 ############################################
 #
@@ -70,8 +70,7 @@ NWROOT=/lfs/h2/emc/couple/noscrub/${runuser}      # root of file system
 export NET=rwps
 export RUN=rwps
 export model_ver=${rwps_ver}
-#export HOMErwps=${HOMEwave:-/lfs/h2/emc/couple/noscrub/${runuser}/${sysver}}
-export HOMErwps=${HOMEwave:-/lfs/h2/emc/couple/noscrub/${runuser}/${modID}/${modID}.${rwps_ver}}
+export HOMErwps=$(cd "$(pwd)/../.." && pwd -P)
 
 # Check HOST file for where to run
 . ./HOST_${modID}
@@ -148,9 +147,6 @@ export COMINOUT=$COMOUT
 
 export COMROOT=/lfs/h2/emc/couple/noscrub/${runuser}/${RWPSdir}/com/${NET}/${model_ver}
 
-#There was a change for the wind name in the ndfd files this happenned at 20181030_15
-#So the variable name must be change in ~fix/multiwaveprnc.ndfd
-# FROM: UGRD_surface VGRD_surface   --->   UGRD_10maboveground VGRD_10maboveground
 #Looking for the actual PDY and cycle
 export PDYcyc_changed=2018103014
 
@@ -161,17 +157,7 @@ mv PDY PDY.TODAY
 . ./PDY.TODAY
 PDYcyc_file="${PDY_file}${cyc_file}"
 echo "COMPARING $PDYcyc_file >= $PDYcyc_changed ?"
-
-#if [ "$PDYcyc_file" -gt "$PDYcyc_changed" ] 
-#then 
-#  echo "THIS IS A RUN AFTER 20181030_14"
-#  # IF the tmpl file is not ready for REAL TIME then edited
-#  sed -i 's/ UGRD_surface VGRD_surface/ UGRD_10maboveground VGRD_10maboveground/g' $HOMErwps/fix/multiwaveprnc.ndfd_rwps.tmpl
-#else
-#  echo "THIS IS A RETROSPECTIVE OR HINDCAST RUN"
-#  # EDIT the   fix/multiwaveprnc.ndfd_rwps.tmpl
-# sed -i 's/ UGRD_10maboveground VGRD_10maboveground/ UGRD_surface VGRD_surface/g' $HOMErwps/fix/multiwaveprnc.ndfd_rwps.tmpl
-#fi
+echo "homerwps is $HOMErwps" 
 
 export PDY=$PDY_file
 export cyc=$cyc_file
@@ -183,5 +169,5 @@ export KEEPDATA='YES'
 
 # Execute the actual J job
 ############################################################################
-${NWROOT}/${modID}/${modID}.${rwps_ver}/jobs/J${MODID}_PREP
+${HOMErwps}/jobs/J${MODID}_PREP
 ############################################################################

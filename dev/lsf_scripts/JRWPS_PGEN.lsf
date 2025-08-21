@@ -1,7 +1,7 @@
 
 
 ############################################
-###   JRWPS_PGEN: Great Lakes Wave Sys   ###
+###   JRWPS_PGEN:  Regional Wave Sys     ###
 ###      LSF card for development        ###
 ############################################
 #
@@ -67,24 +67,10 @@ else
  pref='g'
 fi
 
-# Lines below for retrospective testing using data in noscrub
-# export DCOM=/gpfs/hps3/emc/marine/noscrub/${runuser}/RWPS_Q1FY15/DCOM
-# export INCOM=/gpfs/hps3/emc/marine/noscrub/${runuser}/RWPS_Q1FY15
 
 export job=JRWPS_PGEN
 export SMSBIN=/gpfs/${pref}p1/emc/marine/save/wavepa/sms_fake
 
-# #Set Version numbers
-#version_file=$NWROOT/${sysver}/versions/run.ver      # file with version info
-#if [ -f $version_file ]
-#then
-#  source $version_file
-#else
-#  echo '##############################################'
-#  echo '### ERROR !! : COULD NOT FIND VERSION CARD ###'
-#  echo '##############################################'
-#  exit 1
-#fi
 
 # Set PDY and cycle here
 export COMDATE=`pwd`
@@ -106,7 +92,7 @@ fi
 export NET=rwps
 export RUN=rwps
 export model_ver=${rwps_ver}
-export HOMErwps=${HOMEwave:-/lfs/h2/emc/couple/noscrub/${runuser}/${modID}/${modID}.${rwps_ver}}
+export HOMErwps=$(cd "$(pwd)/../.." && pwd -P)
 
 # Set j-job parameters (extracted from j-job for DEV by new NCO standards)
 # the stmp file system is hugely slow
@@ -135,5 +121,5 @@ export KEEPDATA='YES'
 
 # Execute the actual J job
 ############################################################################
-${NWROOT}/${modID}/${modID}.${rwps_ver}/jobs/J${MODID}_PGEN
+${HOMErwps}/jobs/J${MODID}_PGEN
 ############################################################################
