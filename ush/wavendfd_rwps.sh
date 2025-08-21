@@ -17,7 +17,7 @@
 #  count=$2      - File count                                                 #
 #  hdr=$3        - Header defining if ww3 binary will have a header           #
 #                                                                             #
-#                                                                May,  2016   #
+#                                                                August 2025  #
 #                                                                             #
 ###############################################################################
 #

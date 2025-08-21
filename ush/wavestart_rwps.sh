@@ -12,7 +12,7 @@
 #                                                                             #
 #  Update record :                                                            #
 #                                                                             #
-# - Origination:                                               01-Mar-2007    #
+# - Origination:                           Saeideh Banihashemi August 2025    #
 #                                                                             #
 ###############################################################################
 #
@@ -35,7 +35,7 @@
 
   off_hour=0
 
-  stp_hour=1 # Hourly GLWU runs
+  stp_hour=1 # Hourly RWPS runs
 
 # --------------------------------------------------------------------------- #
 # 1.  Loop to find file
