@@ -11,6 +11,8 @@
 
 # 1. Build ice field processor
 
+readonly HOMErwps_=$(cd "$(dirname "$(readlink -f -n "${BASH_SOURCE[0]}" )" )/.." && pwd -P)
+
 source ../versions/build.ver
 
 outfile=`pwd`/build_ww3.out
@@ -43,7 +45,7 @@ done
 # 2. Build WW3 model code 
 # Determine which switch to use 
 
-ww3switch=model/bin/switch_NCEP_glwu
+ww3switch=model/bin/switch_NCEP_rwps
 
 
 # Check final exec folder exists
@@ -58,6 +60,8 @@ finalexecdir=$( pwd -P )/../exec
 
  module purge
  source ../modulefiles/build_wavewatch3.modules
+ module list 
+
 
  set -x
 
@@ -69,7 +73,7 @@ export SWITCHFILE="${WW3_DIR}/${ww3switch}"
 # Build exes for prep jobs and post jobs:
 prep_exes="ww3_grid ww3_prep ww3_prnc"
 post_exes="ww3_outp ww3_gint ww3_ounf ww3_grib"
-run_exes="ww3_multi"
+run_exes="ww3_shel"
 
 #create build directory: 
 path_build=$WW3_DIR/build_SHRD
@@ -79,21 +83,32 @@ echo "Forcing a SHRD build"
 
 echo $(cat ${SWITCHFILE}) > ${path_build}/tempswitch
 
-sed -e "s/DIST/SHRD/g"\
-    -e "s/OMPG / /g"\
-    -e "s/OMPH / /g"\
-    -e "s/MPIT / /g"\
-    -e "s/MPI / /g"\
-    -e "s/B4B / /g"\
-    -e "s/PDLIB / /g"\
-    -e "s/NOGRB/NCEP2/g"\
-       ${path_build}/tempswitch > ${path_build}/switch
-rm ${path_build}/tempswitch
 
-echo "Switch file is $path_build/switch with switches:" 
+sed -e "s/DIST/SHRD/g" \
+  -e "s/OMPG / /g" \
+  -e "s/OMPH / /g" \
+  -e "s/MPIT / /g" \
+  -e "s/MPI / /g" \
+  -e "s/PIO / /g" \
+  -e "s/B4B / /g" \
+  -e "s/PDLIB / /g" \
+  -e "s/SCOTCH / /g" \
+  -e "s/METIS / /g" \
+  -e "s/NOGRB/NCEP2/g" \
+  "${path_build}/tempswitch" >"${path_build}/switch"
+rm "${path_build}/tempswitch"
+
+echo "Switch file is $path_build/switch with switches:"
 cat $path_build/switch
 
-#Build executables: 
+#define cmake build options
+MAKE_OPT="-DCMAKE_INSTALL_PREFIX=${path_build}"
+if [[ "${BUILD_TYPE:-"Release"}" == "Debug" ]]; then
+    MAKE_OPT+=" -DCMAKE_BUILD_TYPE=Debug"
+fi
+
+#Build executables:
+# shellcheck disable=SC2086
 cmake $WW3_DIR -DSWITCH=$path_build/switch -DCMAKE_INSTALL_PREFIX=install
 rc=$?
 if [[ $rc -ne 0 ]] ; then
@@ -205,7 +220,7 @@ if [[ $rc -ne 0 ]] ; then
 fi
 
 # Copy to top-level exe directory
-cp $path_build/install/bin/ww3_multi $finalexecdir/wavefcst
+cp $path_build/install/bin/ww3_shel $finalexecdir/wavefcst
 rc=$?
 if [[ $rc -ne 0 ]] ; then
   echo "FATAL: Unable to copy $path_build/ww3_multi to $finalexecdir (Error code $rc)"
